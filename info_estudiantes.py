@@ -1,4 +1,5 @@
 def nombres_estudiantes():
+    # Nombres de los estudiantes
     estudiante_1 = "Daniel Sebastian Gomez Villafuerte"
     estudiante_2 = "Fernando Sebastian Arias Navarro"
 
