@@ -70,6 +70,7 @@ class Subasta:
             print(f"Artículo: {self.producto.nombre_producto}")
             print(f"Ganador: {self.ganador.nombre}")
             print(f"Precio final: {self.oferta_mayor}")
+            ##self.mostrar_participantes()
             print("----------------------------\n")
             print("Presione Enter para avanzar")
 
@@ -125,6 +126,7 @@ class Subasta:
         self.estado = "activa"
         self.iniciar_bots()
         self.usuario = Participante(len(self.participantes) + 1, nombre)
+        self.participantes.append(self.usuario)
         hilo_usuario = threading.Thread(target = self.accion_usuario)
         
 

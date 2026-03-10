@@ -39,7 +39,8 @@ class PlataformaSubastas:
                     subasta.registrar_participante(participante)
    
                 subasta.simular_subasta(usuario)
-                self.lista_subastas.clear()    
+                self.lista_subastas.clear()
+                print("Regresando al menú principal")    
                 return
 
             else: 
