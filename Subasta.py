@@ -4,7 +4,7 @@ import time
 from random import randint
 
 class Subasta:
-    # Agregue los atributos subastaID, duracion y estado
+
     def __init__(self, producto, subastaID, duracion = 30): 
         self.producto = producto
         self.subastaID = subastaID
@@ -27,17 +27,18 @@ class Subasta:
         # Usuario humano
         self.usuario = None
 
+        # EVENTO PARA FINALIZAR SUBASTA
+        self.event = threading.Event()
+
+
 
     def registrar_participante(self, participante):
             self.participantes.append(participante)
 
-    # Cambie la lógica para acceder a un monto ya guardado de un participante y 
-    # proceder con la comparación en vez de solo actualizar el monto del
-    # participante cuando su oferta sea mayor a la oferta actual de la subasta
+
     def recibir_oferta(self, participante):
         with self.mutex:
-            # Dejare este if por si acaso
-            if(self.estado == "finalizada"):
+            if self.estado == "finalizada":
                 return   
             monto = participante.oferta_actual
             if monto > self.oferta_mayor:
@@ -48,79 +49,82 @@ class Subasta:
             else:
                 print(f"La oferta del participante {participante.nombre} es menor que la oferta actual.")
 
+
     def mostrar_oferta_actual(self):
         print(f"La oferta más alta actual es: {self.oferta_mayor}")
+
 
     def mostrar_participantes(self):
         for participante in self.participantes:
             print(f"Participante {participante.nombre}, ultima oferta de: {participante.oferta_actual}")
-    
-    # Se podria cambiar la logica de este timer para que los hilos no duerman más de la duración de la subasta
+
+
     def iniciar_timer(self):
         if self.timer:
             self.timer.cancel()
-        # este if se puede usar para refrescar el tiempo restante de la subasta
+
         if self.estado == "activa":
             self.timer = threading.Timer(self.duracion, self.finalizar_subasta)
             self.timer.start()
-            self.timer.join()
-    
-    # Alguna que otra cosa fue hecha con IA, como esta función.
+
     def finalizar_subasta(self):
-        """Función que ejecuta el Timer al agotarse el tiempo."""
         with self.mutex:
             self.estado = "finalizada"
+
+            self.event.set()
             print("\n--- ¡SUBASTA FINALIZADA! ---")
             print(f"Artículo: {self.producto.nombre_producto}")
-            print(f"Ganador: {self.ganador.nombre}")
+
+            if self.ganador:
+                print(f"Ganador: {self.ganador.nombre}")
+            else:
+                print("No hubo ganador")
+
             print(f"Precio final: {self.oferta_mayor}")
             print("----------------------------\n")
             with self.pmutex: 
                 self.mostrar_participantes()
             print("Presione Enter para avanzar")
 
+
     # =========================
-    # Funciones para simular la subasta (Esto tambien podria ser una clase?)
+    # SIMULACION
     # =========================
-        
+
     def iniciar_bots(self):
-        # Limpiamos primero la lista de hilos
-        self.hilos.clear() 
+        self.hilos.clear()
         for participante in self.participantes:
-           self.hilos.append(threading.Thread(target=self.accion_bot, args=(participante,)))
-    
-    # Acciones que van a realizar los demas hilos
-    # (Siento que hay una forma más elegante para no usar el mismo if seguido)
+            hilo = threading.Thread(
+                target=self.accion_bot,
+                args=(participante,))
+            self.hilos.append(hilo)
+
     def accion_bot(self, participante):
         cantidad_pujas = 2
         for i in range(cantidad_pujas):
-            if (self.estado == "finalizada"):
+            if self.estado == "finalizada":
                 return
             monto = randint(100,1500)
             tiempo_espera = randint(5,7)
-            participante.realizar_oferta(self,monto)
-            time.sleep(tiempo_espera)
-        if (self.estado == "finalizada"):
+            participante.realizar_oferta(self, monto)
+            # ESPERA INTERRUMPIBLE
+            if self.event.wait(tiempo_espera):
                 return
+        if self.estado == "finalizada":
+            return
         print(f"Participante {participante.nombre} ya no quiere participar")
 
-    # Me olvide como resolver la condicion de carrera al momento de imprimir en el terminal
     def accion_usuario(self):
         while True:
-            # Obviamente, se deberia implementar mejor este input para tomar valores decimales 
-            # o usar algun algoritmo para pasar de float a string y de string a int 
             try: 
                 monto = int(input(f"> Participante {self.usuario.nombre}, ingrese una oferta: "))  
-
             except(ValueError):
-                if(self.estado == "finalizada"): 
-                    return      
+                if self.estado == "finalizada":
+                    return
                 print("\nEscriba solo números enteros!")
                 continue
-
-            if(self.estado == "finalizada"): 
-                return  
-                     
+            if self.estado == "finalizada":
+                return
             self.usuario.realizar_oferta(self,monto)
         
     #Quemando codigo para testear la entrada de futuros postores durante la subasta    
@@ -135,7 +139,6 @@ class Subasta:
         h1.start()
         h1.join()
 
-    # INICIAR SUBASTA
     def simular_subasta(self, nombre):
         self.estado = "activa"
         self.iniciar_bots()
@@ -144,20 +147,11 @@ class Subasta:
         self.participantes.append(self.usuario)
 
         for hilo in self.hilos:
-            # Posiblemente esta sea la solución para que el programa avance más rapido (Actualización: algo asi)
-            hilo.daemon = True
             hilo.start()
-        
         hilo_usuario.start()
         self.añadir_bot()
         self.iniciar_timer()
-        
+        for hilo in self.hilos:
+            hilo.join()
         hilo_usuario.join()
-        
-        # Porque aveces hay un delay al finalizar el programa? (Actualizacion: ya se porque)
         print("Simulación terminada!")
-    
-    # porque este objeto sigue existiendo cuando ya no tiene referencias? Maybe sea por los hilos que duermen
-    # más que la duración de la subasta o por la referencia mutua entre esta clase y participantes
-    #def __del__(self):
-        #print("Esta subasta acabo!")
