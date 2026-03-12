@@ -12,3 +12,6 @@ class Participante:
             subasta.recibir_oferta(self)
         else: 
             print(f"\nNueva oferta de {self.nombre} es menor o igual a su anterior oferta!")
+
+    #def __del__(this):
+        #print(f"{this.nombre} se va!")

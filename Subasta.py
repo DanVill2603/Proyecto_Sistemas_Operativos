@@ -9,23 +9,27 @@ class Subasta:
         self.producto = producto
         self.subastaID = subastaID
         self.duracion = duracion
+
+        # Valores protegidos por self.mutex
         self.oferta_mayor = producto.precio_base
         self.estado = "pendiente"
         self.participantes = []
         self.ganador = None
 
-        #Bots
+        # Bots
         self.hilos = []
-        #Mutex para proteger el atributo oferta_mayor
+        # Mutex para proteger el atributo oferta_mayor
         self.mutex = threading.Lock()
-        #Timer para cerrar la subasta
+        # Mutex para proteger la lista de los participantes
+        self.pmutex = threading.Lock()
+        # Timer para cerrar la subasta
         self.timer = None
-        #Usuario humano
+        # Usuario humano
         self.usuario = None
 
 
     def registrar_participante(self, participante):
-        self.participantes.append(participante)
+            self.participantes.append(participante)
 
     # Cambie la lógica para acceder a un monto ya guardado de un participante y 
     # proceder con la comparación en vez de solo actualizar el monto del
@@ -71,6 +75,8 @@ class Subasta:
             print(f"Ganador: {self.ganador.nombre}")
             print(f"Precio final: {self.oferta_mayor}")
             print("----------------------------\n")
+            with self.pmutex: 
+                self.mostrar_participantes()
             print("Presione Enter para avanzar")
 
     # =========================
@@ -91,7 +97,6 @@ class Subasta:
             if (self.estado == "finalizada"):
                 return
             monto = randint(100,1500)
-            # Tengo que hacer que este numero sea menor al tiempo restante
             tiempo_espera = randint(5,7)
             participante.realizar_oferta(self,monto)
             time.sleep(tiempo_espera)
@@ -118,7 +123,17 @@ class Subasta:
                      
             self.usuario.realizar_oferta(self,monto)
         
-
+    #Quemando codigo para testear la entrada de futuros postores durante la subasta    
+    def añadir_bot(self):
+        time.sleep(7)
+        bot = Participante(len(self.participantes) + 1, "Rodrigo")
+        h1 = threading.Thread(target=self.accion_bot, args=(bot,))
+        with self.pmutex:
+            self.participantes.append(bot)
+            print(f"{bot.nombre} se une a la subasta!")
+        #h1.daemon = True
+        h1.start()
+        h1.join()
 
     # INICIAR SUBASTA
     def simular_subasta(self, nombre):
@@ -126,7 +141,7 @@ class Subasta:
         self.iniciar_bots()
         self.usuario = Participante(len(self.participantes) + 1, nombre)
         hilo_usuario = threading.Thread(target = self.accion_usuario)
-        
+        self.participantes.append(self.usuario)
 
         for hilo in self.hilos:
             # Posiblemente esta sea la solución para que el programa avance más rapido (Actualización: algo asi)
@@ -134,6 +149,7 @@ class Subasta:
             hilo.start()
         
         hilo_usuario.start()
+        self.añadir_bot()
         self.iniciar_timer()
         
         hilo_usuario.join()
