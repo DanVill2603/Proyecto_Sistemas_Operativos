@@ -98,93 +98,52 @@ class Subasta:
     # =========================
 
     def iniciar_bots(self):
-
         self.hilos.clear()
-
         for participante in self.participantes:
-
             hilo = threading.Thread(
                 target=self.accion_bot,
-                args=(participante,)
-            )
-
+                args=(participante,))
             self.hilos.append(hilo)
 
-
     def accion_bot(self, participante):
-
         cantidad_pujas = 2
-
         for i in range(cantidad_pujas):
-
             if self.estado == "finalizada":
                 return
-
             monto = randint(100,1500)
             tiempo_espera = randint(5,7)
-
             participante.realizar_oferta(self, monto)
-
             # ESPERA INTERRUMPIBLE
             if self.event.wait(tiempo_espera):
                 return
-
         if self.estado == "finalizada":
             return
-
         print(f"Participante {participante.nombre} ya no quiere participar")
 
-
     def accion_usuario(self):
-
         while True:
-
             try: 
                 monto = int(input(f"> Participante {self.usuario.nombre}, ingrese una oferta: "))  
-
             except(ValueError):
-
                 if self.estado == "finalizada":
                     return
-
                 print("\nEscriba solo números enteros!")
                 continue
-
             if self.estado == "finalizada":
                 return
-
             self.usuario.realizar_oferta(self,monto)
 
-
     def simular_subasta(self, nombre):
-
         self.estado = "activa"
-
-        # CREAR BOTS
         self.iniciar_bots()
-
-        # CREAR USUARIO
         self.usuario = Participante(len(self.participantes) + 1, nombre)
-
-        # AGREGAR USUARIO A PARTICIPANTES
         self.participantes.append(self.usuario)
-
         hilo_usuario = threading.Thread(target=self.accion_usuario)
-
-        # INICIAR BOTS
         for hilo in self.hilos:
             hilo.start()
-
         hilo_usuario.start()
-
-        # INICIAR TIMER
         self.iniciar_timer()
-
-        # ESPERAR BOTS
         for hilo in self.hilos:
             hilo.join()
-
-        # ESPERAR USUARIO
         hilo_usuario.join()
-
         print("Simulación terminada!")
