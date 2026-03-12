@@ -16,20 +16,23 @@ class PlataformaSubastas:
         opcion = ""
         print(">>> SIMULADOR SUBASTA <<<")
         print("Se subastará un Iphone X con valor inicial de 100")
+
         while opcion != "no":
             print("Desea participar?")
             opcion = input("Si/No: ")
-            if opcion.lower() == "no":
+
+            if(opcion.lower() == "no"):
                 print(f"Te esperaremos a la proxima, {usuario}!")
                 self.lista_subastas.clear()
                 return
+            
+            elif(opcion.lower() == "si"):
 
-
-            elif opcion.lower() == "si":
                 print("INICIANDO SIMULACION")
                 subasta = self.lista_subastas[0]
 
                 for persona in personas:
+
                     participante = Participante(
                         len(subasta.participantes) + 1,
                         persona )
@@ -39,3 +42,5 @@ class PlataformaSubastas:
                 return
             else:
                 print("Ingrese una opción correcta!")
+                   
+

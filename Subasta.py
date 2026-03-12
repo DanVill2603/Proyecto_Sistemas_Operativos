@@ -14,6 +14,7 @@ class Subasta:
         self.participantes = []
         self.ganador = None
 
+
         # Bots
         self.hilos = []
 
@@ -30,18 +31,16 @@ class Subasta:
         self.event = threading.Event()
 
 
+
     def registrar_participante(self, participante):
         self.participantes.append(participante)
 
 
     def recibir_oferta(self, participante):
         with self.mutex:
-
             if self.estado == "finalizada":
                 return   
-
             monto = participante.oferta_actual
-
             if monto > self.oferta_mayor:
                 self.oferta_mayor = monto
                 self.ganador = participante
@@ -61,7 +60,6 @@ class Subasta:
 
 
     def iniciar_timer(self):
-
         if self.timer:
             self.timer.cancel()
 
@@ -69,16 +67,11 @@ class Subasta:
             self.timer = threading.Timer(self.duracion, self.finalizar_subasta)
             self.timer.start()
 
-
     def finalizar_subasta(self):
-
         with self.mutex:
-
             self.estado = "finalizada"
 
-            # DESPERTAR A TODOS LOS HILOS
             self.event.set()
-
             print("\n--- ¡SUBASTA FINALIZADA! ---")
             print(f"Artículo: {self.producto.nombre_producto}")
 
@@ -132,6 +125,7 @@ class Subasta:
             if self.estado == "finalizada":
                 return
             self.usuario.realizar_oferta(self,monto)
+
 
     def simular_subasta(self, nombre):
         self.estado = "activa"
