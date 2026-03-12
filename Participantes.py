@@ -4,7 +4,6 @@ class Participante:
         self.nombre = nombre
         self.oferta_actual = 0
 
-    # Se agregó este metodo por si el mismo usuario desea realizar otra oferta mayor a la anterior
     def realizar_oferta(self, subasta, monto):
         if(monto > self.oferta_actual):
             self.oferta_actual = monto
