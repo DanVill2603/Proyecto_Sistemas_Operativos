@@ -9,22 +9,22 @@ class Subasta:
         self.producto = producto
         self.subastaID = subastaID
         self.duracion = duracion
+
+        # Valores protegidos por self.mutex
         self.oferta_mayor = producto.precio_base
         self.estado = "pendiente"
         self.participantes = []
         self.ganador = None
 
-
         # Bots
         self.hilos = []
-
-        # Mutex para proteger la oferta mayor
+        # Mutex para proteger el atributo oferta_mayor
         self.mutex = threading.Lock()
-
-        # Timer
+        # Mutex para proteger la lista de los participantes
+        self.pmutex = threading.Lock()
+        # Timer para cerrar la subasta
         self.timer = None
-
-        # Usuario 
+        # Usuario humano
         self.usuario = None
 
         # EVENTO PARA FINALIZAR SUBASTA
@@ -33,7 +33,7 @@ class Subasta:
 
 
     def registrar_participante(self, participante):
-        self.participantes.append(participante)
+            self.participantes.append(participante)
 
 
     def recibir_oferta(self, participante):
@@ -82,7 +82,8 @@ class Subasta:
 
             print(f"Precio final: {self.oferta_mayor}")
             print("----------------------------\n")
-
+            with self.pmutex: 
+                self.mostrar_participantes()
             print("Presione Enter para avanzar")
 
 
@@ -125,17 +126,30 @@ class Subasta:
             if self.estado == "finalizada":
                 return
             self.usuario.realizar_oferta(self,monto)
-
+        
+    #Quemando codigo para testear la entrada de futuros postores durante la subasta    
+    def añadir_bot(self):
+        time.sleep(7)
+        bot = Participante(len(self.participantes) + 1, "Rodrigo")
+        h1 = threading.Thread(target=self.accion_bot, args=(bot,))
+        with self.pmutex:
+            self.participantes.append(bot)
+            print(f"{bot.nombre} se une a la subasta!")
+        #h1.daemon = True
+        h1.start()
+        h1.join()
 
     def simular_subasta(self, nombre):
         self.estado = "activa"
         self.iniciar_bots()
         self.usuario = Participante(len(self.participantes) + 1, nombre)
+        hilo_usuario = threading.Thread(target = self.accion_usuario)
         self.participantes.append(self.usuario)
-        hilo_usuario = threading.Thread(target=self.accion_usuario)
+
         for hilo in self.hilos:
             hilo.start()
         hilo_usuario.start()
+        self.añadir_bot()
         self.iniciar_timer()
         for hilo in self.hilos:
             hilo.join()

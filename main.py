@@ -3,6 +3,8 @@ from info_proyecto import descripcion_proyecto
 from Producto import Productos
 from Subasta import Subasta
 from PlataformaSubasta import PlataformaSubastas
+import gc
+import threading
 
 # TODO: -Cambiar la logica del timer de subastas
 #       -Arreglar la condición de carrera de la salida del terminar al iniciar la subasta
@@ -11,7 +13,7 @@ from PlataformaSubasta import PlataformaSubastas
 # Parametros para la simulación
 personas = ["Juanito", "Pedrito", "Maria"]
 producto = Productos("Iphone X",100,"Iphone X (no se que otro producto usar de ejemplo)")
-duracion = 10
+duracion = 15
 
 # Instancia de la plataforma de subastas
 plataforma = PlataformaSubastas()
@@ -22,6 +24,9 @@ def mostrar_menu():
     print("Opción 2: Mostrar descripción")
     print("Opcion 3: Iniciar programa de subasta")
     print("Opción 9: Cerrar programa")
+    #print(threading.enumerate())
+    #print(gc.garbage)
+    gc.collect()
 
 # Esto podria ser una clase?
 def simulador_subasta():
@@ -51,6 +56,7 @@ def main():
                 descripcion_proyecto()
             case 3:
                 simulador_subasta()
+                
             case 9:
                 print("Programa finalizado con éxito.")
                 break
