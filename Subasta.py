@@ -14,13 +14,16 @@ class Subasta:
         # Valores protegidos por self.mutex
         self.oferta_mayor = producto.precio_base
         self.estado = "pendiente"
-        self.participantes = []
         self.ganador = None
 
+        # Valores protegigos por self.pmutex
+        self.participantes = []
         self.hilos = []
 
         self.mutex = threading.Lock()
+        self.pmutex = threading.Lock() 
         self.event = threading.Event()
+        self.timer = threading.Timer(self.duracion, self.finalizar_subasta) #Se agrego variable timer para mayor control
 
         # LOG
         self.log_lock = threading.Lock()
@@ -36,7 +39,9 @@ class Subasta:
 
 
     def registrar_participante(self, participante):
+        with self.pmutex:
             self.participantes.append(participante)
+        self.escribir_log(f"{participante.nombre} se ha registrado en la subasta.")
 
 
     def recibir_oferta(self, participante):
@@ -51,12 +56,12 @@ class Subasta:
                 self.ganador = participante
 
 
-                mensaje = f"Nueva oferta: {monto} por {participante.nombre}"
+                mensaje = f"Nueva oferta más alta: {monto} por {participante.nombre}"
                 print(mensaje)
                 self.escribir_log(mensaje)
 
             else:
-                mensaje = f"Oferta rechazada de {participante.nombre}"
+                mensaje = f"Oferta de {participante.nombre} rechazada"
                 print(mensaje)
                 self.escribir_log(mensaje)
 
@@ -71,13 +76,14 @@ class Subasta:
 
 
             if self.ganador:
-                print(f"Ganador: {self.ganador.nombre}")
+                print(f"Ganador/a: {self.ganador.nombre}")
             else:
                 print("Sin ganador")
 
             print(f"Precio final: {self.oferta_mayor}")
             print("--------------------------\n")
             self.escribir_log("SUBASTA FINALIZADA")
+            self.escribir_log(f"Ganador/a: {self.ganador.nombre} con precio final de {self.oferta_mayor}\n")
 
 
     def iniciar_bots(self):
@@ -91,7 +97,17 @@ class Subasta:
             )
             self.hilos.append(hilo)
 
-
+    # Se ha añadido función para añadir un bot en medio de la subasta
+    def añadir_bot(self, nombre):
+        if self.event.wait(5):
+                return
+        bot = Participante(len(self.participantes) + 1, nombre)
+        h1 = threading.Thread(target=self.accion_bot, args=(bot,))
+        self.registrar_participante(bot)
+        print(f"\n{bot.nombre} se une a la subasta!")
+        self.hilos.append(h1)
+        h1.start()
+       
     def accion_bot(self, participante):
 
         limite = randint(500, 2000)
@@ -113,10 +129,17 @@ class Subasta:
     def simular_subasta(self):
         self.estado = "activa"
         self.iniciar_bots()
+        
         for hilo in self.hilos:
             hilo.start()
-        # temporizador manual
-        threading.Timer(self.duracion, self.finalizar_subasta).start()
+        # Temporizador manual 
+        self.timer.start()
+        # Las llamadas a añadir_bot siempre ira despues de iniciar el timer
+        self.añadir_bot("Don Pepe")
+
         for hilo in self.hilos:
             hilo.join()
+        
+        self.timer.join() #podria ser un daemon
+        
         print("Simulación terminada")
