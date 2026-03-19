@@ -37,3 +37,4 @@ class PlataformaSubastas:
         subasta.simular_subasta()
 
         self.lista_subastas.clear()
+      

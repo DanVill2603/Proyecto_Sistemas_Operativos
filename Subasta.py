@@ -10,12 +10,15 @@ class Subasta:
         self.producto = producto
         self.subastaID = subastaID
         self.duracion = duracion
+
+        # Valores protegidos por self.mutex
         self.oferta_mayor = producto.precio_base
         self.estado = "pendiente"
         self.participantes = []
         self.ganador = None
 
         self.hilos = []
+
         self.mutex = threading.Lock()
         self.event = threading.Event()
 
@@ -31,21 +34,22 @@ class Subasta:
                 f.write(f"[{tiempo}] {mensaje}\n")
 
 
+
     def registrar_participante(self, participante):
-        self.participantes.append(participante)
+            self.participantes.append(participante)
 
 
     def recibir_oferta(self, participante):
         with self.mutex:
-
             if self.estado == "finalizada":
                 return
 
-            monto = participante.oferta_actual
 
+            monto = participante.oferta_actual
             if monto > self.oferta_mayor:
                 self.oferta_mayor = monto
                 self.ganador = participante
+
 
                 mensaje = f"Nueva oferta: {monto} por {participante.nombre}"
                 print(mensaje)
@@ -59,12 +63,12 @@ class Subasta:
 
     def finalizar_subasta(self):
         with self.mutex:
-
             self.estado = "finalizada"
             self.event.set()
 
             print("\n--- SUBASTA FINALIZADA ---")
             print(f"Producto: {self.producto.nombre_producto}")
+
 
             if self.ganador:
                 print(f"Ganador: {self.ganador.nombre}")
@@ -73,7 +77,6 @@ class Subasta:
 
             print(f"Precio final: {self.oferta_mayor}")
             print("--------------------------\n")
-
             self.escribir_log("SUBASTA FINALIZADA")
 
 
@@ -105,23 +108,15 @@ class Subasta:
 
             if self.event.wait(randint(1,3)):
                 return
-
         print(f"{participante.nombre} dejó de ofertar")
 
-
     def simular_subasta(self):
-
         self.estado = "activa"
-
         self.iniciar_bots()
-
         for hilo in self.hilos:
             hilo.start()
-
         # temporizador manual
         threading.Timer(self.duracion, self.finalizar_subasta).start()
-
         for hilo in self.hilos:
             hilo.join()
-
         print("Simulación terminada")
