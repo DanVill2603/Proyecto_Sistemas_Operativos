@@ -24,7 +24,7 @@ class Subasta:
 
         # LOG
         self.log_lock = threading.Lock()
-        self.log_file = "log_subasta.txt"
+        self.log_file = "bitacora.log"
 
 
     def escribir_log(self, mensaje):
