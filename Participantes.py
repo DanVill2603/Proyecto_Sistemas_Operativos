@@ -1,4 +1,3 @@
-import threading
 class Participante:
 
     def __init__(self, id_participante, nombre):
