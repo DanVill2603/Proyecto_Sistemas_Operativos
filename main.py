@@ -1,6 +1,6 @@
 from info_estudiantes import nombres_estudiantes 
 from info_proyecto import descripcion_proyecto
-from Producto import Productos
+from Producto import Producto
 from Subasta import Subasta
 from PlataformaSubasta import PlataformaSubastas
 import gc
@@ -12,7 +12,7 @@ import threading
 
 # Parametros para la simulación
 personas = ["Juanito", "Pedrito", "Maria"]
-producto = Productos("Iphone X",100,"Iphone X (no se que otro producto usar de ejemplo)")
+producto = Producto("Iphone X",100,"Iphone X (no se que otro producto usar de ejemplo)")
 duracion = 15
 
 # Instancia de la plataforma de subastas
@@ -30,9 +30,9 @@ def mostrar_menu():
 
 # Esto podria ser una clase?
 def simulador_subasta():
-    usuario = str(input("Ingrese su nommbre: "))
+    #usuario = str(input("Ingrese su nommbre: "))
     plataforma.agregar_subasta(producto, duracion)
-    plataforma.simular_subasta(personas, usuario)
+    plataforma.simular_subasta(personas)
 
 # Ya añadi el metodo main, me confundí en el anterior Avance 2 
 def main():
