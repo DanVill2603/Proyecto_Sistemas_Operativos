@@ -25,7 +25,7 @@ class PlataformaSubastas:
             self.lista_subastas.clear()
             return
 
-        subasta = self.lista_subastas[0]
+        subasta = self.lista_subastas[0] #Esta linea es por si habrá más de una subasta 
 
         for persona in personas:
             participante = Participante(
