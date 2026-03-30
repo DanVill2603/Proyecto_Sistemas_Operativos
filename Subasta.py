@@ -1,6 +1,7 @@
 from Participantes import Participante
 import threading
 from random import randint
+from random import choice
 from datetime import datetime
 
 
@@ -43,25 +44,29 @@ class Subasta:
             self.participantes.append(participante)
         self.escribir_log(f"{participante.nombre} se ha registrado en la subasta.")
 
+    def ver_oferta(self, participante):
+        with self.mutex:
+            mensaje = f"{participante.nombre} revisa la oferta mayor: {self.oferta_mayor}"
+            print ("\n"+mensaje)
+            self.escribir_log(mensaje)
+            return self.oferta_mayor
 
     def recibir_oferta(self, participante):
         with self.mutex:
             if self.estado == "finalizada":
                 return
 
-
             monto = participante.oferta_actual
             if monto > self.oferta_mayor:
                 self.oferta_mayor = monto
                 self.ganador = participante
 
-
                 mensaje = f"Nueva oferta más alta: {monto} por {participante.nombre}"
-                print(mensaje)
+                print("\n" + mensaje)
                 self.escribir_log(mensaje)
 
             else:
-                mensaje = f"Oferta de {participante.nombre} rechazada"
+                mensaje = f"Oferta de {participante.nombre} rechazada por ser menor a la oferta mayor!"
                 print(mensaje)
                 self.escribir_log(mensaje)
 
@@ -73,7 +78,6 @@ class Subasta:
 
             print("\n--- SUBASTA FINALIZADA ---")
             print(f"Producto: {self.producto.nombre_producto}")
-
 
             if self.ganador:
                 print(f"Ganador/a: {self.ganador.nombre}")
@@ -111,11 +115,25 @@ class Subasta:
     def accion_bot(self, participante):
 
         limite = randint(500, 2000)
+        pity = 1
 
         while not self.event.is_set():
 
-            incremento = randint(10,100)
-            nueva_oferta = participante.oferta_actual + incremento
+            incremento = choice([50,100])
+            prob_ofertar = randint(pity,6)
+            temp = self.ver_oferta(participante)
+
+            if(prob_ofertar<3):
+                pity += 1
+                mensaje = f"{participante.nombre} decide no ofertar esta vez"
+                print(mensaje)
+                self.escribir_log(mensaje)
+                if self.event.wait(randint(1,3)):
+                    return
+                continue
+            
+            pity = 1
+            nueva_oferta = temp + incremento
 
             if nueva_oferta > limite:
                 break
@@ -124,7 +142,10 @@ class Subasta:
 
             if self.event.wait(randint(1,3)):
                 return
-        print(f"{participante.nombre} dejó de ofertar")
+        
+        mensaje = f"{participante.nombre} dejará de ofertar"
+        print(mensaje)
+        self.escribir_log(mensaje)
 
     def simular_subasta(self):
         self.estado = "activa"
@@ -134,7 +155,7 @@ class Subasta:
             hilo.start()
         # Temporizador manual 
         self.timer.start()
-        # Las llamadas a añadir_bot siempre ira despues de iniciar el timer
+        # Las llamadas a añadir_bot siempre iran despues de iniciar el timer
         self.añadir_bot("Don Pepe")
 
         for hilo in self.hilos:

@@ -1,0 +1,61 @@
+[01:18:02] Juanito se ha registrado en la subasta.
+[01:18:02] Pedrito se ha registrado en la subasta.
+[01:18:02] Maria se ha registrado en la subasta.
+[01:18:02] Juanito revisa la oferta mayor: 100
+[01:18:02] Juanito decide no ofertar esta vez
+[01:18:02] Pedrito revisa la oferta mayor: 100
+[01:18:02] Pedrito decide no ofertar esta vez
+[01:18:02] Maria revisa la oferta mayor: 100
+[01:18:02] Maria decide no ofertar esta vez
+[01:18:03] Maria revisa la oferta mayor: 100
+[01:18:03] Nueva oferta más alta: 200 por Maria
+[01:18:04] Juanito revisa la oferta mayor: 200
+[01:18:04] Nueva oferta más alta: 250 por Juanito
+[01:18:05] Pedrito revisa la oferta mayor: 250
+[01:18:05] Nueva oferta más alta: 300 por Pedrito
+[01:18:05] Juanito revisa la oferta mayor: 300
+[01:18:05] Juanito decide no ofertar esta vez
+[01:18:06] Maria revisa la oferta mayor: 300
+[01:18:06] Maria decide no ofertar esta vez
+[01:18:07] Don Pepe se ha registrado en la subasta.
+[01:18:07] Pedrito revisa la oferta mayor: 300
+[01:18:07] Don Pepe revisa la oferta mayor: 300
+[01:18:07] Nueva oferta más alta: 350 por Pedrito
+[01:18:07] Oferta de Don Pepe rechazada por ser menor a la oferta mayor!
+[01:18:08] Juanito revisa la oferta mayor: 350
+[01:18:08] Nueva oferta más alta: 450 por Juanito
+[01:18:09] Maria revisa la oferta mayor: 450
+[01:18:09] Maria decide no ofertar esta vez
+[01:18:09] Pedrito revisa la oferta mayor: 450
+[01:18:09] Don Pepe revisa la oferta mayor: 450
+[01:18:09] Nueva oferta más alta: 550 por Pedrito
+[01:18:09] Oferta de Don Pepe rechazada por ser menor a la oferta mayor!
+[01:18:10] Maria revisa la oferta mayor: 550
+[01:18:10] Nueva oferta más alta: 600 por Maria
+[01:18:10] Juanito revisa la oferta mayor: 600
+[01:18:10] Nueva oferta más alta: 700 por Juanito
+[01:18:11] Pedrito revisa la oferta mayor: 700
+[01:18:11] Don Pepe revisa la oferta mayor: 700
+[01:18:11] Nueva oferta más alta: 750 por Pedrito
+[01:18:11] Oferta de Don Pepe rechazada por ser menor a la oferta mayor!
+[01:18:12] Pedrito revisa la oferta mayor: 750
+[01:18:12] Pedrito decide no ofertar esta vez
+[01:18:13] Maria revisa la oferta mayor: 750
+[01:18:13] Nueva oferta más alta: 850 por Maria
+[01:18:13] Don Pepe revisa la oferta mayor: 850
+[01:18:13] Juanito revisa la oferta mayor: 850
+[01:18:13] Juanito dejará de ofertar
+[01:18:13] Nueva oferta más alta: 900 por Don Pepe
+[01:18:14] Don Pepe revisa la oferta mayor: 900
+[01:18:14] Nueva oferta más alta: 1000 por Don Pepe
+[01:18:15] Pedrito revisa la oferta mayor: 1000
+[01:18:15] Nueva oferta más alta: 1100 por Pedrito
+[01:18:16] Maria revisa la oferta mayor: 1100
+[01:18:16] Nueva oferta más alta: 1200 por Maria
+[01:18:16] Pedrito revisa la oferta mayor: 1200
+[01:18:16] Nueva oferta más alta: 1300 por Pedrito
+[01:18:16] Don Pepe revisa la oferta mayor: 1300
+[01:18:16] Don Pepe decide no ofertar esta vez
+[01:18:17] SUBASTA FINALIZADA
+[01:18:17] Ganador/a: Pedrito con precio final de 1300
+
