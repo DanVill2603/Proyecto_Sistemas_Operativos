@@ -93,6 +93,7 @@ class SubastaGUI:
             self.escribir_log(f"Ganador/a: {self.ganador.nombre} con precio final de {self.oferta_mayor}\n")
 
 
+    #Esto funciona? no lo probe
     def iniciar_bots(self, grid_participantes):
 
         self.hilos.clear()
@@ -134,6 +135,8 @@ class SubastaGUI:
         self.hilos.append(h1)
         h1.start()
        
+
+    #Ya no se que hago aqui  
     def accion_bot(self, participante, label_oferta):
 
         limite = randint(500, 2000)

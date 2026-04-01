@@ -9,11 +9,14 @@ from info_proyecto import info_proyecto
 
 
 #Ya ni se que arquitectura apliqué en este modulo, solo espero que no se rompa
+#Actualizacion: maybe sea monolito, no se
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initialize_ui()
-    
+        self.lbl_Oferta = QLabel("Oferta actual: ")
+        self.contenedor_participantes = QWidget()
+        
     def initialize_ui(self):
         self.setFixedSize(1280,720)
         self.setWindowTitle("Proyecto Sistemas Operativos")
@@ -21,8 +24,6 @@ class MainWindow(QMainWindow):
         self.show()
 
         #Parametros para la simulación
-        self.lbl_Oferta = QLabel("Oferta actual: ")
-        self.contenedor_participantes = QWidget()
         
         
 
@@ -138,20 +139,21 @@ class MainWindow(QMainWindow):
         container_3.setProperty("tipo","stacked_widgets")
 
 
-        #Pagina 4: Simulación
-        titulo_4 = QLabel("Simulación Iniciada")
-        titulo_4.setProperty("tipo", "subtitulo")
+        #Pagina 4: Simulación (como conecto esta interfaz con los hilos?)
+        #diosmio ayudame
+        #titulo_4 = QLabel("Simulación Iniciada")
+        #titulo_4.setProperty("tipo", "subtitulo")
 
         
-        self.lbl_Oferta.setProperty("tipo", "contenido")
-        self.lbl_Oferta.setWordWrap(True)
+        #self.lbl_Oferta.setProperty("tipo", "contenido")
+        #self.lbl_Oferta.setWordWrap(True)
 
-        self.page4_layout = QVBoxLayout()
-        self.page4_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.page4_layout.setContentsMargins(30, 30, 30, 30)
-        self.page4_layout.addWidget(titulo_4)
-        self.page4_layout.addWidget(self.lbl_Oferta)
-        self.page4_layout.addLayout(hb_opciones)
+        #self.page4_layout = QVBoxLayout()
+        #self.page4_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        #self.page4_layout.setContentsMargins(30, 30, 30, 30)
+        #self.page4_layout.addWidget(titulo_4)
+        #self.page4_layout.addWidget(self.lbl_Oferta)
+        #self.page4_layout.addLayout(hb_opciones)
 
 
         #Stacked Layout para ir cambiando de pestañas
@@ -197,11 +199,14 @@ class MainWindow(QMainWindow):
         button_txt = button.text().lower()
         match button_txt:
             case "si":
-                self.stacked_layout.setCurrentIndex(4)
+                self.stacked_layout.setCurrentIndex(0)
                 self.iniciar_simulacion()
             case "no":
                 self.stacked_layout.setCurrentIndex(0)
     
+    #pues el plan es pasarle las referencias al GridLayout y a la oferta actual para que 
+    #la clase subastaGUI pueda modificarla...
+    #pero a saber como se puede hacer eso
     def iniciar_simulacion(self):
         self.contenedor_participantes.setParent(None)
         self.contenedor_participantes.deleteLater()
