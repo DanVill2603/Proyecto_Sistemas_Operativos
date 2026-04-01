@@ -1,8 +1,8 @@
 
 class info_estudiantes:
     def __init__(self):
-        self.lista_estudiantes = ["Dani"
-                            , "Fer"]
+        self.lista_estudiantes = ["Daniel Sebastian Gomez Villafuerte"
+                            , "Fernando Sebastian Arias Navarro"]
         
         
         
