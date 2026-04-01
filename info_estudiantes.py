@@ -1,11 +1,15 @@
-def nombres_estudiantes():
-    # Nombres de los estudiantes
-    estudiante_1 = "Daniel Sebastian Gomez Villafuerte"
-    estudiante_2 = "Fernando Sebastian Arias Navarro"
 
-    print("\n=== Nombres de los estudiantes ===")
-    print(f"> Estudiante 1: {estudiante_1}.")
-    print(f"> Estudiante 2: {estudiante_2}.")
+class info_estudiantes:
+    def __init__(self):
+        self.lista_estudiantes = ["Dani"
+                            , "Fer"]
+        
+        
+        
 
-if __name__ == "__main__":
-    nombres_estudiantes()
+    def nombres_estudiantes(self): 
+        print("\n=== Nombres de los estudiantes ===")
+        print(f"> Estudiante 1: {self.lista_estudiantes[0]}.")  
+        print(f"> Estudiante 2: {self.lista_estudiantes[1]}.") 
+
+

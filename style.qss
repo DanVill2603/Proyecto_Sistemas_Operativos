@@ -1,0 +1,68 @@
+
+/* Estilo de la ventana principal */
+QMainWindow{
+    background-color: #f5f5f5;
+}
+
+
+/* Estilo del label principal */
+QLabel[tipo="titulo"]{
+    background-color: rgba(100, 170, 255, 255);
+    border-radius: 10px; 
+    font-family: "Arial";      
+    font-size: 26pt;   
+    font-weight: bold; 
+    padding: 20px;
+}
+
+/* Estilo de subtitulos*/
+QLabel[tipo="subtitulo"]{
+    font-family: "Arial";      
+    font-size: 20pt;   
+    font-weight: bold;          
+}
+
+
+/* Estilo de contenidos*/
+QLabel[tipo="contenido"]{
+    padding-left: 20px;
+    font-family: "Arial";
+    font-size: 16pt;              
+}
+
+
+/* Estilo de botones */
+QPushButton{
+    background-color: rgba(255, 255, 255, 0);
+    padding: 20px;
+    font-size: 18px;
+}
+
+QPushButton:hover{
+    background-color: rgba(100, 170, 255, 255); 
+    border-radius: 0px;
+    border: 0px solid white; 
+}
+
+QPushButton:pressed{
+    background-color: rgba(30, 80, 150, 255); 
+    border-radius: 0px;
+    color: rgba(255, 255, 255, 180); 
+}
+
+
+/* Estilo del VBox botones*/
+#Grupo_Botones{
+    background-color: #ffffff;
+    border-radius: 10px; 
+}
+
+
+/* Estilo del widgets de stacked_layout*/
+QWidget[tipo="stacked_widgets"]{
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+
+
