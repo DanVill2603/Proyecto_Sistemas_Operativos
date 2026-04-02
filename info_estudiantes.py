@@ -1,7 +1,7 @@
 
 class info_estudiantes:
     def __init__(self):
-        self.lista_estudiantes = ["Daniel Sebastian Gomez Villafuerte"
+        self.lista_estudiantes = ["Daniel Sebastian Gómez Villafuerte"
                             , "Fernando Sebastian Arias Navarro"]
         
         
@@ -9,7 +9,7 @@ class info_estudiantes:
 
     def nombres_estudiantes(self): 
         print("\n=== Nombres de los estudiantes ===")
-        print(f"> Estudiante 1: {self.lista_estudiantes[0]}.")  
-        print(f"> Estudiante 2: {self.lista_estudiantes[1]}.") 
+        for i in range(len(self.lista_estudiantes)):
+            print(f"> Estudiante {i+1}: {self.lista_estudiantes[i]}.")  
 
 

@@ -1,25 +1,27 @@
 
 /* Estilo de la ventana principal */
 QMainWindow{
-    background-color: #f5f5f5;
+    background-color: #172a54;
 }
+
 
 
 /* Estilo del label principal */
 QLabel[tipo="titulo"]{
-    background-color: rgba(100, 170, 255, 255);
-    border-radius: 10px; 
     font-family: "Arial";      
     font-size: 26pt;   
     font-weight: bold; 
     padding: 20px;
+    color: white;
 }
 
 /* Estilo de subtitulos*/
 QLabel[tipo="subtitulo"]{
     font-family: "Arial";      
     font-size: 20pt;   
-    font-weight: bold;          
+    font-weight: bold;     
+    color: white;  
+        
 }
 
 
@@ -27,42 +29,75 @@ QLabel[tipo="subtitulo"]{
 QLabel[tipo="contenido"]{
     padding-left: 20px;
     font-family: "Arial";
-    font-size: 16pt;              
+    font-size: 16pt;
+    color: white;               
 }
 
 
 /* Estilo de botones */
 QPushButton{
-    background-color: rgba(255, 255, 255, 0);
+    background-color: #273c63;
     padding: 20px;
     font-size: 18px;
+    border-radius: 7px;
+    border: 2px solid #3e4f71;
+    color: white;
 }
 
 QPushButton:hover{
-    background-color: rgba(100, 170, 255, 255); 
-    border-radius: 0px;
-    border: 0px solid white; 
+    background-color: rgb(109, 224, 255); 
+    border: 2px solid rgb(109, 224, 255);
+    color: black;
 }
 
 QPushButton:pressed{
-    background-color: rgba(30, 80, 150, 255); 
-    border-radius: 0px;
-    color: rgba(255, 255, 255, 180); 
+    background-color: rgb(30, 80, 150); 
+    border: 2px solid rgb(30, 80, 150);
+    color: black;
 }
 
 
 /* Estilo del VBox botones*/
 #Grupo_Botones{
-    background-color: #ffffff;
+    background-color: #283c63;
     border-radius: 10px; 
 }
 
 
 /* Estilo del widgets de stacked_layout*/
 QWidget[tipo="stacked_widgets"]{
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0);
+    border: 3px solid #485778;
     border-radius: 10px;
+    
 }
+
+/* Estilo de linea divisora*/
+QWidget[tipo="linea_divisora"]{
+    border: 1px solid #485778;
+    background-color: #485778;
+}
+
+/* Contenedor principal de la barra */
+QProgressBar {
+    border: 2px solid rgba(61, 61, 61, 0); 
+    border-radius: 10px;       /* Bordes redondeados */
+    text-align: center;       /* Centra el porcentaje */
+    color: transparent;             /* Color de la letra */
+    font-weight: bold;
+    background-color: rgba(43, 43, 43, 0); Fondo de la barra (no lleno) 
+}
+
+/* La parte que se desliza/llena (Slider) */
+QProgressBar::chunk {
+    background-color: rgb(93, 185, 216); /* Color azul */
+    /* width: 10px;                Opcional: crea un efecto de bloques */
+    margin: 1px;               /* Espaciado entre el borde y el relleno */
+    border-radius: 8px;        /* Bordes redondeados internos */
+    
+}
+
+
 
 
 
