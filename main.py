@@ -1,25 +1,16 @@
-from info_estudiantes import nombres_estudiantes 
-from info_proyecto import descripcion_proyecto
+from info_estudiantes import info_estudiantes
+from info_proyecto import info_proyecto
 from Producto import Producto
 from PlataformaSubasta import PlataformaSubastas
 import gc
 
 
-# TODO: -Agregar una clase para manejar el log (crear, alterar y borrar) (opcional)
-#       -Cambiar los bots para que hereden la clase threads (opcional, puede salir mal)
-#       -Hacer más listos a los bots (esque como no se me ocurrio que la gente primero
-#        ve el precio mayor y luego oferta si puede) (opcional)
-#       -Hacer más justa la subasta (bueno esto ya seria un caso hipotetico perfecto donde todos
-#        tengan la misma latencia para la subasta)
-
-
-# Parametros para la simulación
-personas = ["Juanito", "Pedrito", "Maria"]
-producto = Producto("Iphone X",100,"Iphone X (no se que otro producto usar de ejemplo)")
-duracion = 15
+# TODO: No se xd
 
 # Instancia de la plataforma de subastas
 plataforma = PlataformaSubastas()
+estudiantes = info_estudiantes()
+descripcion = info_proyecto()
 
 
 def mostrar_menu():
@@ -33,8 +24,8 @@ def mostrar_menu():
 
 # Esto podria ser una clase?
 def simulador_subasta():
-    plataforma.agregar_subasta(producto, duracion)
-    plataforma.simular_subasta(personas)
+    plataforma.agregar_subasta()
+    plataforma.simular_subasta()
 
 # Limpiar log 
 # (No habria condición de carrera con otras partes del código pues 
@@ -68,9 +59,9 @@ def main():
         print()
         match opcion:
             case 1:
-                nombres_estudiantes()
+                estudiantes.nombres_estudiantes()
             case 2:
-                descripcion_proyecto()
+                descripcion.descripcion_proyecto()
             case 3:
                 simulador_subasta()
             case 4:

@@ -1,13 +1,22 @@
+import time
+
 from Participantes import Participante
 import threading
 from random import randint
 from random import choice
 from datetime import datetime
+from PyQt6.QtCore import QObject, pyqtSignal
 
 
-class Subasta:
+class SubastaGUI(QObject):
+    sig_actualizar_bot = pyqtSignal(int, int, str)
+    sig_actualizar_global = pyqtSignal(int, str)
+    sig_ganador = pyqtSignal(str, int, str)
+    sig_nuevo_bot = pyqtSignal(int, str) # Para el bot que se une después
+    sig_tiempo_restante = pyqtSignal(int)
 
     def __init__(self, producto, subastaID, duracion = 30): 
+        super().__init__()
         self.producto = producto
         self.subastaID = subastaID
         self.duracion = duracion
@@ -30,6 +39,8 @@ class Subasta:
         self.log_lock = threading.Lock()
         self.log_file = "log_subasta.txt"
 
+        
+
 
     def escribir_log(self, mensaje):
         with self.log_lock:
@@ -42,7 +53,9 @@ class Subasta:
     def registrar_participante(self, participante):
         with self.pmutex:
             self.participantes.append(participante)
-        self.escribir_log(f"{participante.nombre} se ha registrado en la subasta.")
+        mensaje = f"{participante.nombre} se ha registrado en la subasta."
+        print(mensaje)
+        self.escribir_log(mensaje)
 
     def ver_oferta(self, participante):
         with self.mutex:
@@ -60,13 +73,17 @@ class Subasta:
             if monto > self.oferta_mayor:
                 self.oferta_mayor = monto
                 self.ganador = participante
-
+                #Avisamos a la UI que la oferta global subió
+                self.sig_actualizar_global.emit(monto, participante.nombre)
+                # Avisamos que este bot tuvo éxito
+                self.sig_actualizar_bot.emit(participante.id_participante, monto, "Aceptada")
                 mensaje = f"Nueva oferta más alta: {monto} por {participante.nombre}"
                 print("\n" + mensaje)
                 self.escribir_log(mensaje)
 
             else:
                 mensaje = f"Oferta de {participante.nombre} rechazada por ser menor a la oferta mayor!"
+                self.sig_actualizar_bot.emit(participante.id_participante, monto, "Rechazada")
                 print(mensaje)
                 self.escribir_log(mensaje)
 
@@ -75,6 +92,8 @@ class Subasta:
         with self.mutex:
             self.estado = "finalizada"
             self.event.set()
+            nombre_ganador = self.ganador.nombre if self.ganador else "Sin ganador"
+            self.sig_ganador.emit(nombre_ganador, self.oferta_mayor, self.producto.nombre_producto)
 
             print("\n--- SUBASTA FINALIZADA ---")
             print(f"Producto: {self.producto.nombre_producto}")
@@ -106,9 +125,9 @@ class Subasta:
         if self.event.wait(5):
                 return
         bot = Participante(len(self.participantes) + 1, nombre)
+        self.sig_nuevo_bot.emit(bot.id_participante, bot.nombre) # Avisar a la UI que cree el layout
         h1 = threading.Thread(target=self.accion_bot, args=(bot,))
         self.registrar_participante(bot)
-        print(f"\n{bot.nombre} se une a la subasta!")
         self.hilos.append(h1)
         h1.start()
        
@@ -146,21 +165,33 @@ class Subasta:
         mensaje = f"{participante.nombre} dejará de ofertar"
         print(mensaje)
         self.escribir_log(mensaje)
+    
+    def _hilo_cuenta_regresiva(self):
+        """Gestiona el tiempo y avisa a la UI cada segundo"""
+        for i in range(self.duracion, -1, -1):
+            if self.event.is_set(): 
+                break
+            self.sig_tiempo_restante.emit(i)
+            time.sleep(1)
+        
+        if not self.event.is_set():
+            self.finalizar_subasta()
 
     def simular_subasta(self):
+        print("Simulación iniciada")
+        
         self.estado = "activa"
         self.iniciar_bots()
         
         for hilo in self.hilos:
             hilo.start()
         # Temporizador manual 
-        self.timer.start()
+        threading.Thread(target=self._hilo_cuenta_regresiva, daemon=True).start()
         # Las llamadas a añadir_bot siempre iran despues de iniciar el timer
         self.añadir_bot("Don Pepe")
 
         for hilo in self.hilos:
             hilo.join()
         
-        self.timer.join() #podria ser un daemon
-        
         print("Simulación terminada")
+
